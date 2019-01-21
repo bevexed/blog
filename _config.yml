@@ -35,7 +35,7 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
@@ -72,8 +72,8 @@ pagination_dir: page
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
-Themes: https://github.com/objectyan/hexo-theme-hannah
-theme: hannah
+Themes: https://github.com/stkevintan/hexo-theme-material-flow
+theme: material-flow
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

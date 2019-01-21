@@ -1,3 +1,3 @@
-[submodule "themes/hannah"]
-	path = themes/hannah
-	url = https://github.com/objectyan/hexo-theme-hannah
+[submodule "themes/material-flow"]
+	path = themes/material-flow
+	url = https://github.com/stkevintan/hexo-theme-material-flow themes/material-flow
