@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle:
-description:
-keywords:
-author: John Doe
+title: bev
+subtitle: Daily
+description: 前端日常学习
+keywords: [js,html,css,node,javaScript,html5,css3,vue,canvas,]
+author: li
 language: zh-cn
 timezone:
 
