@@ -67,6 +67,7 @@ $ gulp
 ### 合并 压缩 JS 任务
 ```javascript
 gulp.task('concatJs',function() {
+  // 有 return 是异步，无 return 是同步
   return gulp.src('路径') // 将数据读取到内存中
     .pipe(concat('临时合并文件名'))  // 临时合并文件
     .pipe(gulp.dest('输出文件目录')) // 输出文件
@@ -94,4 +95,12 @@ gulp.task('cleanCss',function() {
 })
 ```
 
+## 注意项
+### return
+- 任务注册时`有`return
+  - 任务异步
+  - 任务结束后释放内存
+- 任务中`无`return
+  - 任务同步
+  - 任务结束后，不会释放内存
 
