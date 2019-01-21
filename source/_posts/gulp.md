@@ -25,11 +25,10 @@ $ npm install -S gulp
 
 ## 使用
 > 在项目根目录下创建一个名为 gulpfile.js 的文件：
-
 ```javascript
 const gulp = require('gulp');
 
-gulp.task('任务名', function() {
+gulp.task('something', function() {
   // 将你的默认的任务代码放在这
 });
 ```
@@ -40,6 +39,7 @@ $ gulp
 ```
 
 ## 常用插件
+> 都需要 npm 安装到依赖中 -S
 ### gulp-concat
 > 合并 `js/css` 文件
 ### gulp-uglify
@@ -54,4 +54,44 @@ $ gulp
 > 实时自动编译刷新
 
 ## 常用 API
+### gulp.task(name[, deps], fn)
+> 注册任务 
+- name : 任务名
+- deps ：
+  - type ：Array
+  - 一个包含任务列表的`数组`，这些任务会在你当前任务运行之前完成。
+- fn : 回调函数
+
+
+## 实例  
+### 合并 压缩 JS 任务
+```javascript
+gulp.task('concatJs',function() {
+  return gulp.src('路径') // 将数据读取到内存中
+    .pipe(concat('临时合并文件名'))  // 临时合并文件
+    .pipe(gulp.dest('输出文件目录')) // 输出文件
+    .piep(uglify()) // 压缩文件
+    .pipe(rename({suffix:'.min'})) // 改名
+    .pipe(gulp.dest('输出文件目录')) // 输出文件
+})
+```
+### 合并 压缩 CSS 任务
+```javascript
+const cssClean = require('gulp-css-clean');
+
+// 编译less为css
+gulp.task('cleanCss',function() {
+  return gulp.src('路径') // 将数据读取到内存中
+    .pipe(less())  // 编译less为css
+})
+// 合并并压缩 css文件
+gulp.task('cleanCss',function() {
+  return gulp.src('路径') // 将数据读取到内存中
+    .piep(concat('临时合并文件名')) // 合并文件
+    .pipe(rename({suffix:'.min'})) // 改名
+    .pipe(cssClean({compatibility:'ie8'}))
+    .pipe(gulp.dest('输出文件目录')) // 输出文件
+})
+```
+
 
