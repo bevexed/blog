@@ -52,6 +52,11 @@ $ gulp
 > 压缩 css
 ### gulp-livereload
 > 实时自动编译刷新
+### gulp-htmlmin
+> 压缩 HTML
+### gulp-load-plugins
+> 万用插件
+> gulp-load-plugins 是依赖 package.json 文件来加载插件的，所以请确保你需要的插件已经加入 package.json 文件并已经安装完毕。
 
 ## 常用 API
 ### gulp.task(name[, deps], fn)
@@ -64,6 +69,7 @@ $ gulp
 
 
 ## 实例  
+> 所需组件请自行引入
 ### 合并 压缩 JS 任务
 ```javascript
 gulp.task('concatJs',function() {
@@ -81,17 +87,25 @@ gulp.task('concatJs',function() {
 const cssClean = require('gulp-css-clean');
 
 // 编译less为css
-gulp.task('cleanCss',function() {
+gulp.task('less',function() {
   return gulp.src('路径') // 将数据读取到内存中
     .pipe(less())  // 编译less为css
 })
 // 合并并压缩 css文件
-gulp.task('cleanCss',function() {
+gulp.task('css',['less'],function() {
   return gulp.src('路径') // 将数据读取到内存中
     .piep(concat('临时合并文件名')) // 合并文件
     .pipe(rename({suffix:'.min'})) // 改名
     .pipe(cssClean({compatibility:'ie8'}))
     .pipe(gulp.dest('输出文件目录')) // 输出文件
+})
+```
+### 压缩 HTML
+```javascript
+gulp.task('less',function() {
+  return gulp.src('路径') // 将数据读取到内存中
+    .pipe(htmlMin({collaspeWhitespace:true}))  // 编译less为css
+    .piep(gulp.dest('输出文件目录'))
 })
 ```
 
