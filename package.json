@@ -7,7 +7,8 @@
   },
   "scripts": {
     "dev": "hexo server --watch",
-    "watch": "hexo g --watch"
+    "watch": "hexo g --watch",
+    "build": "hexo g -d"
   },
   "proxy": {
     "port": 3000

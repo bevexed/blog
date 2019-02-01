@@ -1,7 +1,7 @@
 ---
-title: typeScript
+title: TypeScript
 date: 2019-01-21 17:21:43
-tags: typeScript
+tags: TypeScript
 categories: TypeScript
 ---
 # [TypeScript](https://www.tslang.cn/docs/handbook/basic-types.html)
@@ -9,6 +9,11 @@ categories: TypeScript
 - 微软开发的开源编程语言
 - 遵循最新的 ES6、ES5规范
 - 提供了类型校验
+
+## 好处
+- 为日后维护带来方便
+- 增加代码可读性
+- 提高安全性
 
 ## 安装
 ```bash
