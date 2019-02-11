@@ -1,7 +1,8 @@
 ---
 title: React基本操作
 date: 2019-01-30 15:57:47
-categories: React
+categories: 
+  - React
 tags: 
 ---
 ## 安装

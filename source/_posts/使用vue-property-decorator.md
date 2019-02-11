@@ -1,8 +1,10 @@
 ---
 title: 使用vue-property-decorator
 date: 2019-02-01 10:41:10
-categories: Vue
-tags: Vue插件
+categories: 
+  - vue
+tags: 
+  - vue插件
 ---
 ## @Emit
 @Emit(event?: string) decorator
@@ -220,6 +222,11 @@ export default {
 }
 ```
 ## @Component (provided by vue-class-component)
+@Component({
+  components: {
+    HelloWorld,
+  },
+})
 ## Mixins (the helper function named mixins provided by vue-class-component)
 
 ## 参考

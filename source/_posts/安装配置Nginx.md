@@ -1,9 +1,10 @@
 ---
 title: ubuntu 18.04 安装配置Nginx
 date: 2019-01-29 11:44:14
-categories: 服务器
+categories: 
+  - 服务器
 tags: 
-- Nginx
+  - Nginx
 ---
 ## 安装
 ```bash

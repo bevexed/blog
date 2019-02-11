@@ -1,8 +1,12 @@
 ---
 title: documentElement 与 body
 date: 2019-01-23 16:08:53
-categories: Dom
-tags: Dom 兼容 Scroll
+categories: 
+  - Dom
+tags: 
+  - Dom 
+  - 兼容 
+  - Scroll
 ---
 # documentElement 与 body
 ## document.documentElement

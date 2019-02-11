@@ -1,8 +1,10 @@
 ---
 title: TypeScript
 date: 2019-01-21 17:21:43
-tags: TypeScript
-categories: TypeScript
+categories: 
+  - TypeScript
+tags: 
+  - TypeScript
 ---
 # [TypeScript](https://www.tslang.cn/docs/handbook/basic-types.html)
 - JavaScript 的超集

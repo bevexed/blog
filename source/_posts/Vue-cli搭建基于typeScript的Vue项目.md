@@ -1,8 +1,10 @@
 ---
 title: Vue-cli搭建基于typeScript的Vue项目
 date: 2019-02-01 10:09:14
-categories: vue
-tags: TypeScript 
+categories: 
+  - vue
+tags: 
+  - TypeScript
 ---
 ## 安装 Vue-cli
 ```bash
