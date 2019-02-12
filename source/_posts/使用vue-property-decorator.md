@@ -221,6 +221,9 @@ export default {
   }
 }
 ```
+### 注意事项
+- 父组件的函数的参数问题
+
 ## @Component (provided by vue-class-component)
 @Component({
   components: {
