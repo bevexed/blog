@@ -2,9 +2,10 @@
 title: 使用vue-property-decorator
 date: 2019-02-01 10:41:10
 categories: 
-  - vue
+  - Vue
 tags: 
-  - vue插件
+  - 插件
+  - TypeScript
 ---
 ## @Emit
 @Emit(event?: string) decorator

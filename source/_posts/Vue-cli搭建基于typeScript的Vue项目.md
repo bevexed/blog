@@ -2,7 +2,7 @@
 title: Vue-cli搭建基于typeScript的Vue项目
 date: 2019-02-01 10:09:14
 categories: 
-  - vue
+  - Vue
 tags: 
   - TypeScript
 ---

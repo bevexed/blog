@@ -1,9 +1,9 @@
 ---
 title: vue查漏补缺
 date: 2019-02-11 16:59:36
-categories: vue
+categories: Vue
 tags:
- - vue
+ - Vue
  - 修饰符
 ---
 ## Vue **不支持** IE8 及以下版本

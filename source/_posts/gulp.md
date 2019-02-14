@@ -2,7 +2,7 @@
 title: gulp 学习
 date: 2019-01-21 17:32:53
 tags: 
-  - gulp
+  - Gulp
 categories: 
   - 构建工具
 ---
