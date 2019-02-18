@@ -105,14 +105,19 @@ import {Swtich, Route, Router, HashHistory, Link} from 'react-router-dom';
 #### location: object
 #### children: node
 
+### withRouter
+将非路由组件变成路由组件
+```javascript
+import {withRouter} from 'react-router-dom'
+export default withRouter(`组件名`)
+```
+
 ### 编程式导航`history`
-在`props`上有`history`对象，这个对象上存在两个方法
+在`props`上有`history`对象，这个对象上存在多个个方法
 - push
+- 
 - replace
 
-```javascript
- this.props.history.replace('/register')
-```
 
 
 
