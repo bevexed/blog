@@ -9,6 +9,14 @@ tags:
 ---
 # 文档
 > https://www.redux.org.cn/
+## redux 模块
+- `redux`模块整体是一个对象模块
+- 内部包含的函数：
+  - createStore(reducers) // reducers:fucntion(state,action)(return newState)
+  - combineReducers(reducers) // reducers:{reducer1,reducer2} 返回：function(state,action){rteturn newState}
+  - applyMiddleware()
+
+ 
 ## 安装
 ### 基本包
 ```bash
