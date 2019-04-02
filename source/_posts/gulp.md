@@ -1,5 +1,5 @@
 ---
-title: gulp 学习
+title: gulp(3.0) 学习
 date: 2019-01-21 17:32:53
 tags: 
   - Gulp
@@ -17,12 +17,12 @@ categories:
 
 ### 全局安装
 ```bash
-$ npm install -g gulp
+> npm install -g gulp
 ```
 
 ### 局部安装
 ```bash
-$ npm install -S gulp
+> npm install -S gulp
 ```
 
 ## 使用
@@ -63,7 +63,7 @@ $ gulp
 ## 常用 API
 ### gulp.task(name[, deps], fn)
 > 注册任务 
-- name : 任务名
+- name : 任务名`不要带空格`
 - deps ：
   - type ：Array
   - 一个包含任务列表的`数组`，这些任务会在你当前任务运行之前完成。
@@ -74,19 +74,23 @@ $ gulp
 > 所需组件请自行引入
 ### 合并 压缩 JS 任务
 ```javascript
+const concat = require('gulp-concat')
+const uglify = require('gulp-uglify')
+
 gulp.task('concatJs',function() {
   // 有 return 是异步，无 return 是同步
   return gulp.src('路径') // 将数据读取到内存中
     .pipe(concat('临时合并文件名'))  // 临时合并文件
-    .pipe(gulp.dest('输出文件目录')) // 输出文件
-    .piep(uglify()) // 压缩文件
+    .pipe(uglify()) // 压缩文件
     .pipe(rename({suffix:'.min'})) // 改名
     .pipe(gulp.dest('输出文件目录')) // 输出文件
 })
 ```
+
 ### 合并 压缩 CSS 任务
 ```javascript
-const cssClean = require('gulp-css-clean');
+const cssClean = require('gulp-clean-css');
+const less = require('gulp-less');
 
 // 编译less为css
 gulp.task('less',function() {
@@ -96,27 +100,31 @@ gulp.task('less',function() {
 // 合并并压缩 css文件
 gulp.task('css',['less'],function() {
   return gulp.src('路径') // 将数据读取到内存中
-    .piep(concat('临时合并文件名')) // 合并文件
+    .pipe(concat('临时合并文件名')) // 合并文件
     .pipe(rename({suffix:'.min'})) // 改名
     .pipe(cssClean({compatibility:'ie8'}))
     .pipe(gulp.dest('输出文件目录')) // 输出文件
 })
 ```
+
 ### 压缩 HTML
 ```javascript
+const htmlMin = require('gulp-htmlmin')
+
 gulp.task('less',function() {
   return gulp.src('路径') // 将数据读取到内存中
-    .pipe(htmlMin({collaspeWhitespace:true}))  // 编译less为css
-    .piep(gulp.dest('输出文件目录'))
+    .pipe(htmlMin({collaspeWhitespace:true}))  // 压缩 HTML
+    .pipe(gulp.dest('输出文件目录'))
 })
 ```
 
 ## 注意项
 ### return
-- 任务注册时`有`return
-  - 任务异步
-  - 任务结束后释放内存
-- 任务中`无`return
-  - 任务同步
-  - 任务结束后，不会释放内存
+#### 任务注册时有return
+- 任务异步
+- 任务结束后释放内存
+
+#### 任务中无return
+- 任务同步
+- 任务结束后，不会释放内存
 
