@@ -42,7 +42,7 @@ tags:
 let isDone: boolean = false;
 ```
 
-#### 数字 `number`
+#### 数值 `number`
 - 和JavaScript一样，TypeScript里的所有数字都是浮点数。 这些浮点数的类型是 number。 除了支持十进制和十六进制字面量，TypeScript还支持ECMAScript 2015中引入的二进制和八进制字面量。
 
 ```typescript
@@ -58,11 +58,32 @@ name = "smith";
 ```
 ##### 可以使用`模板字符串`
 
-#### 数组 `list`
+#### 数组类型 `list`
+- 「类型 + 方括号」来表示数组 
 ```typescript
 // 数组中的所有元素都是同一类型
 let list: number[] = [1, 2, 3];
+```
+
+- 使用数组泛型表示
+```typescript
+// 使用数组 泛型
 let list: Array<number> = [1, 2, 3];
+```
+
+- 用接口表示数组
+```typescript
+interface NumberArray {
+    [index: number]: number;
+}
+let fibonacci: NumberArray = [1, 1, 2, 3, 5];
+```
+- 类数组
+```typescript
+// 事实上常见的类数组都有自己的接口定义，如 IArguments, NodeList, HTMLCollection 等
+function sum() {
+    let args: IArguments = arguments;
+}
 ```
 
 #### 元组 `Tuple`
@@ -115,14 +136,23 @@ enum Color {Red = 1, Green = 2, Blue = 4}
 let c: Color = Color.Green;
 ```
 
+- 可以由枚举的值得到他的名字
+```typescript
+enum Color {Red = 1, Green, Blue}
+let colorName: string = Color[2];
+
+console.log(colorName);  // 显示'Green'因为上面代码里它的值是2
+```
+
 #### 任意类型 `any`
+- 为不清楚类型的变量指定一个类型
 ```typescript
 let notSure: any = 4;
 notSure = "maybe a string instead";
 notSure = false; // okay, definitely a boolean
 ```
 
-#### Void
+#### 空值 void
 - 表示没有任何类型。 当一个函数没有返回值时，你通常会见到其返回值类型是 void：
 
 ```typescript
@@ -135,6 +165,15 @@ function Num(): number {
     return 123
 }
 ```
+
+#### 联合类型
+- 表示取值可为多种类型中的一种
+```typescript
+let myFavoriteNumber: string | number;
+myFavoriteNumber = 'seven';
+myFavoriteNumber = 7;
+```
+
 #### Null 和 Undefined
 - 默认情况下null和undefined是所有类型的子类型。
 - 指定了--strictNullChecks标记，null和undefined只能赋值给void和它们各自。
@@ -148,8 +187,23 @@ let num:number | null | undefined;
 
 #### Object
 - object表示非原始类型
+  - 除number，string，boolean，symbol，null或undefined之外的类型
+
+#### 类型断言
+- 手动指定一个值得`类型`
+- 类型断言有两种形式
+```typescript
+// 尖括号 语法
+let someValue: any = "this is a string";
+let strLength: number = (<string>someValue).length;
+
+// as 语法 => jsx 中 必须用这个
+let someValue: any = "this is a string";
+let strLength: number = (someValue as string).length;
+```
 
 ### 函数
+> 函数是 JavaScript 中一等功民
 #### 声明
 ##### 具名函数
 ```typescript
@@ -243,7 +297,7 @@ class Web extends Person{
 私有类型
 - 只有在当前类里可以访问
 
-##### readinly
+##### readonly
 只读属性
 
 ##### static
@@ -401,3 +455,7 @@ let a = f<number>(1);
 let b:Config<number> = f
 b(2)
 ```
+
+## 参考链接
+- [TypeScript 入门教程](https://ts.xcatliu.com/basics/type-of-function.html)
+- 
