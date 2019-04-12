@@ -1,5 +1,5 @@
 ---
-title: gulp(3.0) 学习
+title: gulp 学习
 date: 2019-01-21 17:32:53
 tags: 
   - Gulp
@@ -27,10 +27,22 @@ categories:
 
 ## 使用
 > 在项目根目录下创建一个名为 gulpfile.js 的文件：
+### 3.0
 ```javascript
 const gulp = require('gulp');
 
 gulp.task('something', function() {
+  // 将你的默认的任务代码放在这
+});
+```
+### 4.0
+```javascript
+const gulp = require('gulp');
+
+gulp.task('default', gulp.series(
+ // 任务
+),
+function() {
   // 将你的默认的任务代码放在这
 });
 ```
@@ -46,6 +58,8 @@ $ gulp
 > 合并 `js/css` 文件
 ### gulp-uglify
 > 压缩 `js` 文件
+### gulp-babel
+> 将es6转换为es5
 ### gulp-rename
 > 文件重命名 
 ### gulp-less
