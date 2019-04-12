@@ -54,6 +54,8 @@ $ gulp
 
 ## 常用插件
 > 都需要 npm 安装到依赖中 -S
+### gulp-connect
+> 自动打开浏览器
 ### gulp-concat
 > 合并 `js/css` 文件
 ### gulp-uglify
@@ -66,6 +68,8 @@ $ gulp
 >  编译 `less`
 ### gulp-clean-css 
 > 压缩 css
+### gulp-rev & gulp-rev-collector
+> 为文件加上版本号，并且自动修改`html`中关于压缩文件的引用路径
 ### gulp-livereload
 > 实时自动编译刷新
 ### gulp-htmlmin
@@ -75,14 +79,27 @@ $ gulp
 > gulp-load-plugins 是依赖 package.json 文件来加载插件的，所以请确保你需要的插件已经加入 package.json 文件并已经安装完毕。
 
 ## 常用 API
-### gulp.task(name[, deps], fn)
+### gulp.task
 > 注册任务 
+#### 3.0 gulp.task(name[, deps], fn)
 - name : 任务名`不要带空格`
 - deps ：
   - type ：Array
   - 一个包含任务列表的`数组`，这些任务会在你当前任务运行之前完成。
 - fn : 回调函数
-
+#### 4.0 gulp.task(parallel and series, fn)
+> gulp4不再能够通过数组形式传入任务，你需要使用gulp.series()和gulp.parallel()来执行他们
+- parallel 
+  - 异步任务
+- series
+  - 同步任务
+```javascript
+gulp.task('default',gulp.parallel('taskA','taskB'));//并行执行
+gulp.task('default',gulp.series('taskA','taskB'));//按顺序执行
+```
+  
+### gulp.watch
+> 监视任务
 
 ## 实例  
 > 所需组件请自行引入
