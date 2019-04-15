@@ -51,6 +51,7 @@ let hexLiteral: number = 0xf00d;
 let binaryLiteral: number = 0b1010;
 let octalLiteral: number = 0o744;
 ```
+
 #### 字符串 `string`
 ```typescript
 let name: string = "bob";
@@ -84,30 +85,6 @@ let fibonacci: NumberArray = [1, 1, 2, 3, 5];
 function sum() {
     let args: IArguments = arguments;
 }
-```
-
-#### 元组 `Tuple`
-- 元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。 比如，你可以定义一对值分别为 string和number类型的元组。
-
-```typescript
-// Declare a tuple type
-let x: [string, number];
-// Initialize it
-x = ['hello', 10]; // OK
-// Initialize it incorrectly
-x = [10, 'hello']; // Error
-```
-##### 访问
-- 当访问一个已知索引的元素，会得到正确的类型：
-```typescript
-console.log(x[0].substr(1)); // OK
-console.log(x[1].substr(1)); // Error, 'number' does not have 'substr'
-```
-- 当访问一个越界的元素，会使用联合类型替代：
-```typescript
-x[3] = 'world'; // OK, 字符串可以赋值给(string | number)类型
-console.log(x[5].toString()); // OK, 'string' 和 'number' 都有 toString
-x[6] = true; // Error, 布尔不是(string | number)类型
 ```
 
 #### 枚举 `enum`
@@ -166,8 +143,10 @@ function Num(): number {
 }
 ```
 
-#### 联合类型
+#### 联合类型 `Union Types`
 - 表示取值可为多种类型中的一种
+- 当 TypeScript 不确定一个联合类型的变量到底是哪个类型的时候，只能访问此联合类型的所有类型里共有的属性或方法
+- 联合类型的变量在被赋值的时候，会根据类型推论的规则推断出一个类型
 ```typescript
 let myFavoriteNumber: string | number;
 myFavoriteNumber = 'seven';
@@ -175,10 +154,34 @@ myFavoriteNumber = 7;
 ```
 
 #### Null 和 Undefined
-- 默认情况下null和undefined是所有类型的子类型。
+- 默认情况下 `null` 和 `undefined` 是所有类型的子类型。
 - 指定了--strictNullChecks标记，null和undefined只能赋值给void和它们各自。
 ```typescript
 let num:number | null | undefined;
+```
+
+#### 元组 `Tuple`
+- 元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。 比如，你可以定义一对值分别为 string和number类型的元组。
+
+```typescript
+// Declare a tuple type
+let x: [string, number];
+// Initialize it
+x = ['hello', 10]; // OK
+// Initialize it incorrectly
+x = [10, 'hello']; // Error
+```
+##### 访问
+- 当访问一个已知索引的元素，会得到正确的类型：
+```typescript
+console.log(x[0].substr(1)); // OK
+console.log(x[1].substr(1)); // Error, 'number' does not have 'substr'
+```
+- 当访问一个越界的元素，会使用联合类型替代：
+```typescript
+x[3] = 'world'; // OK, 字符串可以赋值给(string | number)类型
+console.log(x[5].toString()); // OK, 'string' 和 'number' 都有 toString
+x[6] = true; // Error, 布尔不是(string | number)类型
 ```
 
 #### Never
@@ -188,6 +191,15 @@ let num:number | null | undefined;
 #### Object
 - object表示非原始类型
   - 除number，string，boolean，symbol，null或undefined之外的类型
+  
+  
+#### 类型推论
+- TypeScirpt 在没有明确的指定类型的时候会推测出一个类型
+- 如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成 `any` 类型而完全不被类型检查
+```typescript
+let myFavoriteNumber = 'seven';
+myFavoriteNumber = 7; // // index.ts(2,1): error TS2322: Type 'number' is not assignable to type 'string'.
+```
 
 #### 类型断言
 - 手动指定一个值得`类型`
@@ -342,22 +354,36 @@ abstract class Animal {
 
 ```
 
-### 接口
-#### 作用
-在面向对象的编程中，接口是一种规范的定义，他定义了行为和动作的规范，在程序设计里，接口起到了限制和规范的作用。
-接口定义了某一批类所需遵守的规范，接口不关心这些类的内部状态数据，也不关心这些类里方法的实现细节，他只规定这批类里必须提供默写方法，提供这些方法的类就可以满足实际需求。
+### 接口 `Interfaces`
+TypeScript 中，使用 接口 来定义对象的类型
 
-#### 定义
+#### 作用
+- 在面向对象的编程中，接口是一种规范的定义，他定义了行为和动作的规范，在程序设计里，接口起到了限制和规范的作用。
+- 接口定义了某一批类所需遵守的规范，接口不关心这些类的内部状态数据，也不关心这些类里方法的实现细节，他只规定这批类里必须提供默写方法，提供这些方法的类就可以满足实际需求。
+
+#### 分类
 ##### 普通接口
+###### 定义
 ```typescript
 interface FullName {
   firstName:string,
   secondName:string,
 }
-function printName(name:FullName) {
-  console.log(name);
+```
+###### 使用
+- 赋值的时候，变量的形状和接口的形状必须保持一致`不可以多，不可以少`
+```typescript
+interface FullName {
+  firstName:string,
+  secondName:string,
+}
+
+let name:FullName= {
+   firstName:'a',
+   secondName:'bc',
 }
 ```
+
 ##### 函数类接口
 ```typescript
 interface Config {
@@ -412,6 +438,87 @@ class C implements B{
   b():void {}
 }
 ```
+
+#### 可选属性
+- 可选属性的含义是 该属性 可以不存在，但是 `仍然不允许添加未定义的属性`
+- 当不需要完全匹配一个形状时，可以用可选属性
+```typescript
+interface Person {
+  name:string,
+  age?:number
+}
+let ton:Person = {
+  name:'Tom'
+}
+
+// 添加 未定义属性 报错
+let jone:Person = {
+   name: 'Tom',
+    age: 25,
+    gender: 'male'
+}
+```
+
+#### 任意属性
+- 希望一个`接口`允许有任意的属性
+```typescript
+interface Person {
+    name: string;
+    age?: number;
+    [propName: string]: any;
+}
+
+let tom: Person = {
+    name: 'Tom',
+    gender: 'male'
+};
+```
+
+- 一旦定义`任意属性`，那么`确定属性` 和`可选属性`的类型都必须是他的类型的子集
+```typescript
+interface Person {
+    name: string;
+    age?: number;
+    [propName: string]: string;
+}
+
+let tom: Person = {
+    name: 'Tom',
+    age: 25,
+    gender: 'male'
+};
+
+// index.ts(3,5): error TS2411: Property 'age' of type 'number' is not assignable to string index type 'string'.
+// index.ts(7,5): error TS2322: Type '{ [x: string]: string | number; name: string; age: number; gender: string; }' is not assignable to type 'Person'.
+//   Index signatures are incompatible.
+//     Type 'string | number' is not assignable to type 'string'.
+//       Type 'number' is not assignable to type 'string'.
+
+//上例中，任意属性的值允许是 string，但是可选属性 age 的值却是 number，number 不是 string 的子属性，所以报错了。
+
+//另外，在报错信息中可以看出，此时 { name: 'Tom', age: 25, gender: 'male' } 的类型被推断成了 { [x: string]: string | number; name: string; age: number; gender: string; }，这是联合类型和接口的结合。
+```
+
+#### 只读属性 `readonly`
+当希望对象中的一些字段只能在`创建`的时候被赋值，可以用`只读`属性
+```typescript
+interface Person {
+    readonly id: number;
+    name: string;
+    age?: number;
+    [propName: string]: any;
+}
+
+let tom: Person = {
+    id: 89757,
+    name: 'Tom',
+    gender: 'male'
+};
+
+tom.id = 9527; // 报错
+```
+
+
 
 ### 泛型
 软件工程中，我们不仅要创建一致的定义良好的API，同时也要考虑可重用性。 组件不仅能够支持当前的数据类型，同时也能支持未来的数据类型，这在创建大型系统时为你提供了十分灵活的功能。
