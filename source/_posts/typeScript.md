@@ -60,31 +60,36 @@ name = "smith";
 ##### 可以使用`模板字符串`
 
 #### 数组类型 `list`
-- 「类型 + 方括号」来表示数组 
+##### 「类型 + 方括号」来表示数组 
 ```typescript
 // 数组中的所有元素都是同一类型
 let list: number[] = [1, 2, 3];
 ```
 
-- 使用数组泛型表示
+##### 使用数组`Array Generic`泛型表示
 ```typescript
 // 使用数组 泛型
 let list: Array<number> = [1, 2, 3];
 ```
 
-- 用接口表示数组
+##### 用接口表示数组
 ```typescript
 interface NumberArray {
-    [index: number]: number;
+    [index: number]: number; // 只要 index 的类型是 number ，那么 值得类型 必须是 number
 }
 let fibonacci: NumberArray = [1, 1, 2, 3, 5];
 ```
-- 类数组
+##### 类数组
 ```typescript
 // 事实上常见的类数组都有自己的接口定义，如 IArguments, NodeList, HTMLCollection 等
 function sum() {
     let args: IArguments = arguments;
 }
+```
+
+##### `any` 在数组中的应用
+```typescript
+let list: any[] = [{a:'b'}, 25, 'a'];
 ```
 
 #### 枚举 `enum`
@@ -217,6 +222,8 @@ let strLength: number = (someValue as string).length;
 ### 函数
 > 函数是 JavaScript 中一等功民
 #### 声明
+- 一个函数有`输入`和`输出`，要在 TypeScript 中对其进行约束，需要把`输入`和`输出`都考虑在内
+- 在 TypeScript 的类型定义中，=> 用来表示函数的定义，左边是输入类型，需要用括号括起来，右边是输出类型。
 ##### 具名函数
 ```typescript
 function f():number {
@@ -228,9 +235,26 @@ function f():number {
 let f = function():number {
   return 123
 }
+// 这段代码只对登号右侧的匿名函数进行了类型定义，等号左边的 f 是通过赋值操作进行类型推论而推断出来的，如果要对 f 添加类型，则：
+let f :(x:number,y:number) => number = function(x:number,y:number):number {
+  return x+y
+}
+```
+##### 用 接口 定义函数
+```typescript
+interface F {
+  (x:number,y:number):number;
+}
+
+let f:F;
+f=function(x:number,y:number):number {
+  return x+y
+}
+
 ```
 
 #### 参数
+- 函数调用时，输入多余或少于要求的参数，是不被允许的
 ##### 定义参数类型
 ```typescript
 function f(x:number,y:number):number {
@@ -252,12 +276,12 @@ function f(x:number=20,y?:number):number {
 ```
 ##### 剩余参数
 ```typescript
-function f(a:number,...result:number[]):number {
+function f(a:number,...rest:number[]):number {
   return 213
 }
 ```
-##### 函数重载
-
+#### 函数重载
+- 重载允许一个`函数`接收`不同数量`或`类型`的参数时，做出不同的处理
 ```typescript
 function f(name:string):string
 function f(age:number):number
@@ -562,6 +586,68 @@ let a = f<number>(1);
 let b:Config<number> = f
 b(2)
 ```
+
+### 声明文件
+- 当使用第三方库时，需要引用他的声明文件，才能获得对应的代码补全，接口提示功能
+- 通常会吧 `声明语句` 放到一个单独的文件 （*.d.ts）中
+- `声明文件` 必须以 `.d.ts` 结尾
+
+#### 声明语句 `declare var`
+- declare var 没有定义一个变量，只是定义了全局变量的类型
+```typescript
+declare var jQuert:(selector:string)=>any
+jQuert('#foo')
+```
+
+#### 第三方声明文件
+[搜索地址](http://microsoft.github.io/TypeSearch/)
+
+#### 书写声明文件
+在不同场景下，声明文件的内容和使用方式有所区别
+- 全局变量：通过 `script` 标签引入的第三方库，注入全局变量
+- npm包：通过 import foo from 'foo' 导入，符合 ES6模块规范
+- UMD库：即可以通过 `script` 标签引入，也可以通过 ES6 模块规范
+- 模块插件：通过 `import` 导入后，可以改变另一模块的结构
+- 直接扩展全局变量：通过 `script` 引入后， 改变一个全局变量的结构。比如 ：为 Array.prototype 新增一个方法
+- 通过导入扩展全局变量：通过 import 导入后，可以改变一个全局变量的结构
+
+
+### 内置对象
+JavaScript 中的很多[内置对象](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects),可以直接在 TypeScript 中当做定义好了的类型
+
+#### ECMAScript 的内置对象
+```typescript
+let b: Boolean = new Boolean(1);
+let e: Error = new Error('Error occurred');
+let d: Date = new Date();
+let a: Array= new Array(1)
+let o: Object = new Object({})
+let r: RegExp = /[a-z]/;
+```
+
+#### DOM 和 BOM 的 内置对象
+Document、HTMLElement、Event、NodeList 等
+```typescript
+let body: HTMLElement = document.body;
+let allDiv: NodeList = document.querySelectorAll('div');
+document.addEventListener('click', function(e: MouseEvent) {
+  // Do something
+});
+```
+
+#### TypeScript 核心库的定义文件
+- TypeScript 核心库的定义文件中定义了所有浏览器环境需要用到的类型，并且是预置在 TypeScript 中的。
+- 当你在使用一些常用的方法的时候，TypeScript 实际上已经帮你做了很多类型判断的工作了
+
+#### 用 TypeScript 写 Node.js
+Node.js 不是内置对象的一部分，如果想用 TypeScript 写 Node.js，则需要引入第三方声明文件：
+```bash
+> npm install @types/node --save-dev
+```
+
+
+
+
 
 ## 参考链接
 - [TypeScript 入门教程](https://ts.xcatliu.com/basics/type-of-function.html)
