@@ -167,6 +167,8 @@ let num:number | null | undefined;
 
 #### 元组 `Tuple`
 - 元组类型允许表示一个已知元素数量和类型的数组，各元素的类型不必相同。 比如，你可以定义一对值分别为 string和number类型的元组。
+- 元祖合并了不同类型的对象
+- 数组合并了相同类型的对象
 
 ```typescript
 // Declare a tuple type
@@ -620,8 +622,6 @@ JavaScript 中的很多[内置对象](https://developer.mozilla.org/zh-CN/docs/W
 let b: Boolean = new Boolean(1);
 let e: Error = new Error('Error occurred');
 let d: Date = new Date();
-let a: Array= new Array(1)
-let o: Object = new Object({})
 let r: RegExp = /[a-z]/;
 ```
 
@@ -645,7 +645,30 @@ Node.js 不是内置对象的一部分，如果想用 TypeScript 写 Node.js，�
 > npm install @types/node --save-dev
 ```
 
+### 类型别名 `type`
+- 给一个类型取一个新名字
+- 类型别名适用于 `联合类型`
+```typescript
+type Name = string;
+type NameResolver = () => string;
+type NameOrResolver = Name | NameResolver;
+function getName(n:NameOrResolver) {
+  if (typeof n === 'string'){
+    return n;
+  } else {
+    return n();
+  }
+}
+```
 
+### 字符串字面量类型
+- 约束取值只能是`某几个`字符串中的一个
+```typescript
+type EventNames = 'click'| 'scroll'|'mouseOver'
+function handleEvent(ele:Element,event:EventNames) {
+  // do sth
+}
+```
 
 
 
