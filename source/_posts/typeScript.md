@@ -728,14 +728,87 @@ tom.id = 9527; // 报错
 
 
 
-### 泛型
-软件工程中，我们不仅要创建一致的定义良好的API，同时也要考虑可重用性。 组件不仅能够支持当前的数据类型，同时也能支持未来的数据类型，这在创建大型系统时为你提供了十分灵活的功能。
+### 泛型 `Generics`
+- 泛型是指在定义函数、接口或类的时候，不预先指定具体类型，而在使用的时候在指定类型的一种特性
+- 软件工程中，我们不仅要创建一致的定义良好的API，同时也要考虑可重用性。 组件不仅能够支持当前的数据类型，同时也能支持未来的数据类型，这在创建大型系统时为你提供了十分灵活的功能。
+- 无法创建 泛型枚举 和 泛型命名空间
 #### 定义
 ```typescript
 function identity<T>(arg: T): T {
     return arg;
 }
 ```
+我们给`identity`添加了类型变量`T`。`T`帮助我们捕获用户传入的类型（比如：`number`），之后我们就可以使用这个类型。
+之后我们再次使用了`T`当做返回值类型。现在我们可以知道参数与返回值类型是相同的。
+这允许我们跟踪函数里使用的类型的信息
+
+#### 使用
+- 传入所有的参数，包括类型参数
+```typescript
+let output = identity<string>('myString'); // type of output will be 'string'
+```
+这里我们明确的指定了`T`是 `string`类型，并做为一个参数传递给了函数
+
+- 利用类型推论 -- 编译器会根据传入的参数自动地帮助我们确定`T`的类型
+```typescript
+let output = identity('myString'); // type of output will be 'string'
+```
+这里并没有明确的使用`<>` 来明确地传入类型；编译器可以查看`myString`的值，然后把`T`设置为他的类型。
+类型推论帮助我们保持代码精简和可读性。
+
+#### 泛型类型
+- 泛型函数的类型 与 非泛型函数的类型 没什么不同，只是有一个类型参数在最前面，想函数声明一样
+```typescript
+function identity<T>(arg:T):T {
+  return arg;
+}
+
+let  myIdentity:<T>(arg:T)=>T=identity;
+```
+
+- 也可以使用不同的泛型参数名，只要在数量上和使用方式上能对应上就可以
+```typescript
+function identity<T>(arg:T) {
+  return arg;
+}
+
+let myIdentity: <U>(arg:U)=>U=identity;
+```
+
+- 还可以使用带有调用签名的对象字面量来定义泛型函数
+```typescript
+function identity<T>(arg:T):T {
+  return arg;
+}
+
+let myIdentity:{<T>(arg:T):T}=identity;
+```
+- 把上面例子里的对象字面量拿出来作为一个接口
+```typescript
+interface GenericIdentityFn {
+  <T>(arg:T):T;
+}
+
+function identity<T>(arg:T):T {
+  return arg;
+}
+
+let myIdntity:GenericIdentityFn=identity;
+```
+
+- 我们可以把泛型参数当作整个接口的一个参数。这样我们就能清楚的知道使用的具体是哪个泛型类型
+```typescript
+interface GenericIdentityFn<T> {
+  (arg:T):T;
+}
+
+function identity<T>(arg:T):T {
+  return arg;
+}
+
+let myIdentity: GenericIdentityFn<number> = identity;
+```
+
 
 #### 泛型类
 ```typescript
