@@ -94,6 +94,8 @@ let list: any[] = [{a:'b'}, 25, 'a'];
 
 #### 枚举 `enum`
 - enum类型是对JavaScript标准数据类型的一个补充。 像C#等其它语言一样，使用枚举类型可以为一组数值赋予友好的名字。
+- 用于取值被限定在一定范围内的场景，比如一周只能有七天
+- 最好不要使用手动赋值
 
 ##### 定义
 ```typescript
@@ -108,8 +110,12 @@ let c: Color = Color.Green;
 ##### 编号
 - 默认情况下，从0开始为元素编号。
 - 你也可以手动的指定成员的数值。 例如，我们将上面的例子改成从 1开始编号：
+  - 手动赋值后，未手动赋值的枚举项会接着上一个枚举项递增
+  - 如果未手动赋值的枚举项与手动赋值的重复了，TypeScript 不会察觉到这一点
+  - 当手动赋值的枚举项不是`数字`时，需要使用类型断言来让`tsc`无视类型检查
+  - 手动赋值的枚举项也可以是`小数`或`负数`，此时未手动赋值的项递增步仍为`1`
 ```typescript
-enum Color {Red = 1, Green, Blue}
+enum Color {Red = 1, Green, Blue=<any>"A"}
 let c: Color = Color.Green;
 ```
 - 也可以全部都采取手动赋值
@@ -125,6 +131,57 @@ let colorName: string = Color[2];
 
 console.log(colorName);  // 显示'Green'因为上面代码里它的值是2
 ```
+##### 枚举项
+枚举项分为`常数项（constant member）`和`计算所得项（computed member）`
+- 常数项
+  - 不具有初始化函数并且之前的枚举成员是常数。在这种情况下，当前枚举成员的值为上一个枚举成员的值加 1。但第一个枚举元素是个例外。如果它没有初始化方法，那么它的初始值为 0。
+  - 枚举成员使用常数枚举表达式初始化。常数枚举表达式是 TypeScript 表达式的子集，它可以在编译阶段求值。当一个表达式满足下面条件之一时，它就是一个常数枚举表达式：
+    - 数字字面量
+    - 引用之前定义的常数枚举成员（可以是在不同的枚举类型中定义的）如果这个成员是在同一个枚举类型中定义的，可以使用非限定名来引用
+    - 带括号的常数枚举表达式
+    - +, -, ~ 一元运算符应用于常数枚举表达式
+    - +, -, *, /, %, <<, >>, >>>, &, |, ^ 二元运算符，常数枚举表达式做为其一个操作对象。若常数枚举表达式求值后为 NaN 或 Infinity，则会在编译阶段报错
+- 计算所得项
+  - 如果紧接在计算所得项后面的是未手动赋值的项，那么它就会因为无法获得初始值而报错：
+```typescript
+enum Color {Red, Green, Blue = "blue".length} // '"blue".length 就是一个计算所得项。
+``` 
+##### 常数枚举 `const enum`
+常数枚举是使用 `const enum` 定义的枚举类型
+- 常数枚举与普通枚举的区别是，它会在编译阶段被删除，并且不能包含计算成员。
+```typescript
+const enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+```
+编译结果
+```javascript
+var directions = [0 /* Up */, 1 /* Down */, 2 /* Left */, 3 /* Right */];
+```
+
+##### 外部枚举 `declare enum`
+- 外部枚举用来描述已经存在的枚举类型的形状。
+- `declare` 定义的类型只会用于编译时的检查，编译结果中会被删除。
+```typescript
+declare enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+
+let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+```
+编译结果
+```javascript
+var directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+```
+
 
 #### 任意类型 `any`
 - 为不清楚类型的变量指定一个类型
@@ -297,9 +354,23 @@ function f(str:any) {
 ```
 
 ### 类
+- 传统方法中，JavaScript 通过构造函数实现类的概念，通过原型链实现继承
+- ES6中 `class` 实现
+#### 类的概念
+- 类（Class）：定义一个事物的抽象特点，包涵他的属性和方法
+- 对象（Object）：类的实例。通过`new`实现
+- 面向对象（OOP）的三大特性：封装、继承、多态
+- 封装（Encapsulation）：将数据的操作细节隐藏起来，只暴露对外的接口。外界调用端不需要（也不可能）知道细节，就能通过对外提供的接口来访问该对象，同时也保证了外界无法任意更改对象内部的数据
+- 继承（Inheritance）：子类继承父类，子类除了拥有父类的所有特性外，还有一些更具体的特性
+- 多态（Polymorphism）：由继承而产生了相关的不同的类，对同一个方法可以有不同的响应。比如：`Cat`和`Dog`都继承自`Animal`，但是分别实现了自己的`eat`方法。此时针对某一实例，我们无需了解它是`Cat`还是`Dog`，就可以直接调用`eat`方法，程序会自动判断出应如何执行`eat`
+- 存取器（getter&setter）：用以改变属性的读取和赋值行为
+- 修饰符（Modified）：修饰符是一些关键字，用于限定成员或类型的性质，比如`public`表示公有属性或方法
+- 抽象类（Abstract Class）：抽象类是供其他类继承的基类，抽象类不允许被实例化。抽象类中的抽象方法必须在子类中实现
+- 接口（Interfaces）：不同类之间公有的属性或方法，可以抽象成一个接口。接口可以被类实现（implements）。一个类只能继承自另一个类，但是可以实现多个接口
+
 #### 定义类
-- class
-- constructor
+- class：定义类
+- constructor：定义构造函数
 ```typescript
 class Person {
   name:string; // 属性 省略了 public 关键词
@@ -312,8 +383,8 @@ class Person {
 }
 ```
 #### 继承
-- extend
-- super
+- extend：实现继承
+- super：调用父类的构造函数和方法
 ```typescript
 class Web extends Person{
   constructor(name:string){
@@ -321,25 +392,58 @@ class Web extends Person{
   }
 }
 ```
+#### 存取器
+使用 getter 和 setter 可以改变属性的赋值和读取行为：
+```typescript
+class Animal {
+  constructor(name:string){
+    this.name=name;
+  }
+   get name(){
+    return 'a'
+  }
+   set name(value){
+    console.log('setter'+value);
+  }
+}
+```
+
+
 #### 修饰符
 属性不加修饰符默认是公有属性
-##### public
-公有修饰符
-- 在当前类里面、子类、类外面都可以访问
+##### 公有修饰符 `public`
+- `public` 修饰的属性或方法都是公有的，可以在任何地方被访问到
 
-##### protected
-保护类型
+##### 保护类型 `protected`
+- `protected` 修饰的属性或方法是受保护的，它和`private`类似，区别是他在子类中也是被允许访问的
 - 在当前类里、子类里可以访问
 
-##### private
-私有类型
+##### 私有类型 `private`
+- `private`修饰的属性或方法是私有的，不能在声明他的类的外部访问
 - 只有在当前类里可以访问
 
-##### readonly
-只读属性
+##### 只读属性 `readonly`
 
-##### static
-静态类型
+
+##### 静态类型 `static`
+- 静态方法：使用`static`修饰的方法称为静态方法，他们不需要实例化，而是直接通过类来调用
+- 静态属性：使用`static`修饰的属性称为静态属性，他们不需要实例化，而是直接通过类来调用
+```typescript
+class Animal {
+  constructor(name:string){
+    this.name=name
+  }
+
+  static isAnimal(a){
+    return a instanceof Animal;
+  }
+}
+
+let a = new Animal('a');
+Animal.isAnimal(a); //true
+a.(aisAnimal); // TypeError: a.isAnimal is not a function
+```
+
 
 #### 多态
 父类定义一个方法不去实现，让继承他的子类去实现，每一个类有不同的表现
@@ -368,6 +472,30 @@ class Dog extends Animal {
 ##### 定义
 `abstract`定义抽象类和抽象方法
 - 抽象类中的抽象方法不包含具体实现并且必须在派生类中实现
+```typescript
+abstract class Animal {
+    public name;
+    public constructor(name) {
+        this.name = name;
+    }
+    public abstract sayHi();
+}
+
+let a = new Animal('Jack'); // index.ts(9,11): error TS2511: Cannot create an instance of the abstract class 'Animal'.
+
+class Cat extends Animal {
+    sayHi(){
+       console.log(`${this.name} say hi.`);
+    }
+    public eat() {
+        console.log(`${this.name} is eating.`);
+    }
+}
+
+let cat = new Cat('Tom');
+
+// index.ts(9,7): error TS2515: Non-abstract class 'Cat' does not implement inherited abstract member 'sayHi' from class 'Animal'.
+```
 - 抽象方法只能放在抽象类里
 - 抽象类的派生类必须必须实现抽象类里的抽象方法
 ```typescript
@@ -377,7 +505,6 @@ abstract class Animal {
         console.log('roaming the earch...');
     }
 }
-
 ```
 
 ### 接口 `Interfaces`
@@ -410,7 +537,8 @@ let name:FullName= {
 }
 ```
 
-##### 函数类接口
+##### 函数类接口(混合类型)
+- 使用接口定义一个函数需要符合的类型
 ```typescript
 interface Config {
   (value:string):string;
@@ -418,6 +546,26 @@ interface Config {
 let setData:Config=function(value:string):string {
   return ''
 }
+```
+- 当函数有自己的属性和方法
+```typescript
+interface Counter {
+  (start:number):string;
+  interval:number;
+  reset():void;
+}
+
+function getCounter():Counter {
+  let counter = <Counter>function(start:number) {}
+  counter.interval=123;
+  counter.reset=function() {}
+  return counter
+}
+
+let c = getCounter();
+c(10);
+c.reset();
+c.interval = 5.0;
 ```
 
 ##### 可索引接口
@@ -435,22 +583,55 @@ interface UserObj {
 let user:UserObj={w:'qw'}
 ```
 
-##### 类类型接口 `implements`
+##### 类类型接口 
+- 实现`implements`是面向对象的一个重要概念。
+- 一般来讲，一个类只能继承自另一个类，有时候不同类之间可以有一些共有的特性，这时候可以把特性提取成接口`interfaces`，用`implements`关键字来实现，这个特性大大提高了面向对象的灵活性
+- 举例来说，门是一个类，防盗门是门的子类。如果防盗门有一个报警器的功能，我们可以简单的给防盗门添加一个报警方法。这时候如果有另一个类，车，也有报警器的功能，就可以考虑把报警器提取出来，作为一个接口，防盗门和车都去实现它：
 ```typescript
-interface Animal {
-  name:string;
-  eat(str:string):void;
+interface Alarm {
+    alert();
 }
-class Dog implements Animal{
-  name:string;
-  constructor(name:string){
-    this.name = name
-  }
-  eat(str:string):void {
-    console.log(str)
-  }
+
+class Door {
+}
+
+class SecurityDoor extends Door implements Alarm {
+    alert() {
+        console.log('SecurityDoor alert');
+    }
+}
+
+class Car implements Alarm {
+    alert() {
+        console.log('Car alert');
+    }
 }
 ```
+- 一个类也可以实现多个接口
+```typescript
+interface Alarm {
+    alert();
+}
+
+interface Light {
+    lightOn();
+    lightOff();
+}
+
+class Car implements Alarm, Light {
+    alert() {
+        console.log('Car alert');
+    }
+    lightOn() {
+        console.log('Car light on');
+    }
+    lightOff() {
+        console.log('Car light off');
+    }
+}
+```
+上例中，Car 实现了 Alarm 和 Light 接口，既能报警，也能开关车灯。
+
 ##### 接口扩展
 ```typescript
 interface A {
@@ -543,6 +724,7 @@ let tom: Person = {
 
 tom.id = 9527; // 报错
 ```
+
 
 
 
@@ -672,6 +854,6 @@ function handleEvent(ele:Element,event:EventNames) {
 
 
 
-## 参考链接
+## 参考文章
 - [TypeScript 入门教程](https://ts.xcatliu.com/basics/type-of-function.html)
-- 
+- [TypeScript Handbook（中文版）](https://zhongsp.gitbooks.io/typescript-handbook/content/)
