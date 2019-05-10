@@ -4,7 +4,6 @@ date: 2019-01-21 17:21:43
 categories: 
   - TypeScript
 tags: 
-  - TypeScript
 ---
 # [TypeScript](https://www.tslang.cn/docs/handbook/basic-types.html)
 - JavaScript 的超集
@@ -924,6 +923,9 @@ function handleEvent(ele:Element,event:EventNames) {
   // do sth
 }
 ```
+
+### 声明合并
+
 
 
 

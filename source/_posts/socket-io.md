@@ -5,7 +5,7 @@ categories:
 - Node
 tags:
 - Node
-- 插架
+- 插件
 ---
 ## 安装
 ```bash
