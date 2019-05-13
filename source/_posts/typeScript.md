@@ -22,7 +22,7 @@ tags:
 ```
 
 ## 编译
-```bash
+```bashb
 > tsc <file>
 ```
 
