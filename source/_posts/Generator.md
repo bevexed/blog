@@ -140,4 +140,123 @@ try {
 
 ## Generator.prototype.return()
 - 该方法返回给定的值,并终结`Generator函数`的遍历
+- 如果不提供参数，则返回值的 value 属性为 undefined
+```javascript
+function* f() {
+  yield 1;
+  yield 2;
+}
 
+let g = f();
+g.next(); // {value: 1, done }
+g.return('foo'); // {value: 'foo', done: true}
+g.next() // {value: undefined, deone: true}
+```
+
+- 如果`Generator函数`内部有 try...finally 代码块，那么 return 方法会推迟到 finally 代码块执行完成在执行
+
+```javascript
+function* f() {
+  yield 1;
+  try {
+    yield 2;
+    yield 3;
+  } catch (e) {
+    yield 4;
+    yield 5;
+  }
+  yield 6;
+}
+
+let g = f();
+g.next(); // { value: 1, done: false }
+g.next(); // { value: 2, done: false}
+g.return(); // { value: 4, done: false}
+g.next(); // { value: 5, done: false}
+g.next(); // { value: 7, done: true}
+```
+
+## yield* 表达式
+- 如果在一个`Generator函数`内调用另一个`Generator函数`，默认情况下是没有效果的
+```javascript
+function* a() {
+  yield 'a';
+}
+
+function* b() {
+  a();
+  yield 'b';
+}
+
+for (let v of b()){
+  console.log(v); // 'b'
+} 
+// a 和 b 都是 Generator函数 在b中调用a不会生效
+```
+
+- `yield*`，用来在一个`Generator函数`里执行另一个`Generator函数`
+```javascript
+function* a() {
+  yield 'a';
+}
+
+function* b() {
+  yield* a();
+  yield 'b';
+}
+
+for (let v of b()){
+  console.log(v); // 'a' 'b'
+} 
+```
+- 如果 yield 命令后面跟的是一个遍历器对象，那么需要在 yield 命令后面加上星号，表明返回的是一个遍历器对象
+```javascript
+function* inner() {
+  yield 'hellow'
+}
+
+function* outer1() {
+  yield 'open';
+  yield inner();
+  yield 'colse'
+}
+
+let gen = outer1()
+gen.next().value; // 'open'
+gen.next().value; // 返回一个遍历器对象
+gen.next().value; // 'colse'
+
+function* outer2() {
+  yield 'open';
+  yield* inner();
+  yield 'close';
+}
+let gen2 = outer2();
+gen2.next().value; // 'open'
+gen2.next().value; // 'hellow'
+gen2.next().value; // 'close'
+```
+
+- yield* 后面的`Generator语句`没有 return 语句时等同于在`Generator函数`内部部署了一个 `for...of` 循环
+- yield* 后面的`Generator语句`有 return 语句时，需要用 `let value = yield* iterator` 的形式获取 return语句的值
+- 如果被代理的`Generator语句`有 return 语句，那么可以向代理他的`Generator函数`返回数据
+- 任何数据只要有`Iterator`接口，就可以被`yield*`遍历
+```javascript
+let a = (function*() {
+  yield 'hellow';
+  yield* 'he'
+  yield* [1,2,3] 
+}())
+
+a.next().value; // 'hellow'
+a.next().value; // 'h'
+a.next().value; // 'e'
+a.next().value; // '1'
+a.next().value; // '2'
+a.next().value; // '3'
+```
+## 应用
+- 异步操作的同步化表达
+- 控制流管理
+- 部署 `Iterator` 接口
+- 作为数据结构
