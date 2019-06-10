@@ -5,6 +5,7 @@ categories:
   - TypeScript
 tags: 
 ---
+
 # [TypeScript](https://www.tslang.cn/docs/handbook/basic-types.html)
 - JavaScript 的超集
 - 微软开发的开源编程语言
