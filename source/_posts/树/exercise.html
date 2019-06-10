@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .root {
+      display: flex;
+      border: 1px solid #000;
+      width: 600px;
+      margin: 0 auto;
+      height: 150px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .root div {
+      display: flex;
+      height: 70%;
+      width: 44%;
+      margin: 0 3%;
+      border: 1px solid #000;
+      justify-content: center;
+      align-items: center;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="root">
+  1
+
+  <div>2
+    <div>4</div>
+    <div>5</div>
+  </div>
+
+  <div>3
+    <div>6</div>
+    <div>7</div>
+  </div>
+</div>
+</body>
+
+<script>
+  class Tree {
+    constructor(node) {
+      this.node = node;
+      this.nodeList = [];
+    }
+
+    preOrder = node => {
+      if (node) {
+        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        this.preOrder(node.firstElementChild);
+        this.preOrder(node.lastElementChild);
+      }
+    };
+
+    inOrder = node => {
+      if (node) {
+        this.inOrder(node.firstElementChild);
+        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        this.inOrder(node.lastElementChild);
+      }
+    };
+
+    postOrder = node => {
+      if (node) {
+        this.postOrder(node.firstElementChild);
+        this.postOrder(node.lastElementChild);
+        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+      }
+    };
+
+    reset() {
+      this.nodeList = [];
+    }
+
+  }
+
+  let node = document.querySelector('.root');
+  let tree = new Tree(node);
+
+  tree.reset();
+  tree.preOrder(node);
+  console.log(tree.nodeList);
+
+  tree.reset();
+  tree.inOrder(node);
+  console.log(tree.nodeList);
+
+  tree.reset();
+  tree.postOrder(node);
+  console.log(tree.nodeList);
+
+</script>
+</html>

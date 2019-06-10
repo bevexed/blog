@@ -2,7 +2,7 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="9df4082d-3da6-44f0-a547-1b72f977f601" name="node" url="http://47.75.70.33">
+      <webServer id="9df4082d-3da6-44f0-a547-1b72f977f601" name="node" url="">
         <fileTransfer host="47.75.70.33" port="22" rootFolder="/home/blog" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
