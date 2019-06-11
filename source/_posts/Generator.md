@@ -36,6 +36,7 @@ tags:
 
 ## yield 表达式
 `yield语句`就是暂停标志
+
 ### next方法的运行逻辑
 1. 遇到`yield`就暂停执行后边的操作，并将紧跟其后的表达式的值作为返回对象的value属性值
 2. 下一次调用 `next方法` 时会继续向下执行，知道遇到下一条`yield语句`
@@ -58,28 +59,33 @@ setTimeout(function() {
   g.next()  // 只有调用 next 以后才执行
 },3000)
 ```
+
 ### 注意事项
 - `yield语句`只能用在`Generator函数`中，用在其他地方会报错
 - 不可以用在 `forEach`等方法的回调函数内，可以使用for循环代替
 - yield表达式如果在另一个表达式中，必须放在圆括号内
+
 ```javascript
 function* f() {
   console.log(1+(yield 2));
 }
 ```
+
 - yield表达式作为函数参数或放在赋值表达式的右边可以不加括号
 
 ## 与Generator接口的关系
 1. 任意一个对象的`Symbol.iterator`方法等于该对像的遍历器对象生成函数，调用该函数会返回该对象的一个遍历器对象
 2. 由于`Generator函数`就是遍历器生成函数，所以可以把`Generator`赋值给对象的`Symbol.iterator`属性，从而使得该对象具有`Iterator接口`
+
 ```javascript
 let myIterable = [];
 myIterable[Symbol.iterator] = function*() {
   yield 1;
   yield 2;
-}
+};
 console.log([...myIterable]) // [1, 2]
 ```
+
 3. `Generator函数`执行后，返回一个遍历器对象。该对象本身也具有`Symbol.iterator`属性，执行后返回自身
 ```javascript
 function* f() {
@@ -123,7 +129,7 @@ let g = function*() {
   }catch (e) {
     console.log('内部捕获',e);
   }
-}
+};
 
 let i = g();
 i.next();
@@ -221,7 +227,7 @@ function* outer1() {
   yield 'colse'
 }
 
-let gen = outer1()
+let gen = outer1();
 gen.next().value; // 'open'
 gen.next().value; // 返回一个遍历器对象
 gen.next().value; // 'colse'
@@ -244,9 +250,9 @@ gen2.next().value; // 'close'
 ```javascript
 let a = (function*() {
   yield 'hellow';
-  yield* 'he'
+  yield* 'he';
   yield* [1,2,3] 
-}())
+}());
 
 a.next().value; // 'hellow'
 a.next().value; // 'h'
