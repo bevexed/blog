@@ -20,7 +20,7 @@ tags:
 Available applications:
   Nginx Full 这个配置打开 80端口和443端口
   Nginx HTTP 这个配置只打开80 (普通, 未加密通信)
-  Nginx HTTPS  这个配置只打开 443 (TLS/SSL 加密通信 )
+  Nginx HTTPS  这个配置只打开 443 (TLS/SSL 加密通信)
   OpenSSH
 ```
 

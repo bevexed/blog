@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>Binary Tree</title>
   <style>
     .root {
       display: flex;
@@ -43,9 +43,12 @@
 </body>
 
 <script>
-  class Tree {
-    constructor(node) {
-      this.node = node;
+  /**
+   * 深度优先遍历的递归写法
+   * 原理：递归的回溯性
+   */
+  class TravelTree {
+    constructor() {
       this.nodeList = [];
     }
 
@@ -80,8 +83,9 @@
   }
 
   let node = document.querySelector('.root');
-  let tree = new Tree(node);
+  let tree = new TravelTree();
 
+  console.log('TravelTree');
   tree.reset();
   tree.preOrder(node);
   console.log(tree.nodeList);
@@ -93,6 +97,117 @@
   tree.reset();
   tree.postOrder(node);
   console.log(tree.nodeList);
+
+  // 深度优先遍历的非递归写法
+  class StackTree {
+    constructor() {
+      this.nodeList = [];
+      this.stack = []
+    }
+
+    /*
+    * 1. 入栈时，取得所有的左孩子
+    * 2. 出栈时，取得所有右孩子
+    * */
+    preOrder(node) {
+      let treeNode = node;
+      while (treeNode || this.stack.length) {
+        // 进栈
+        while (treeNode) {
+          this.stack.push(treeNode);
+          this.nodeList.push(treeNode.firstChild.textContent.trim());
+          treeNode = treeNode.firstElementChild;
+        }
+        // 出栈
+        if (this.stack.length) {
+          treeNode = this.stack.pop();
+          treeNode = treeNode.lastElementChild;
+        }
+      }
+    }
+
+    inOrder(node) {
+      let treeNode = node;
+      while (treeNode || this.stack.length) {
+        while (treeNode) {
+          this.stack.push(treeNode);
+          treeNode = treeNode.firstElementChild;
+        }
+        if (this.stack.length) {
+          treeNode = this.stack.pop();
+          this.nodeList.push(treeNode.firstChild.textContent.trim());
+          treeNode = treeNode.lastElementChild;
+        }
+      }
+    }
+
+    postOrder(node) {
+      let treeNode = node;
+      let parentNode;
+      while (treeNode || this.stack.length) {
+        while (treeNode) {
+          this.stack.push(treeNode);
+          treeNode = treeNode.firstElementChild;
+        }
+        if (this.stack.length && !treeNode) {
+          treeNode = this.stack.pop();
+          treeNode = treeNode.lastElementChild;
+        }
+      }
+    }
+
+    reset() {
+      this.stack = [];
+      this.nodeList = [];
+    }
+
+  }
+
+  let stackTree = new StackTree();
+  console.log('TravelTree');
+
+  stackTree.preOrder(node);
+  console.log(stackTree.nodeList);
+
+  stackTree.reset();
+  stackTree.inOrder(node);
+  console.log(stackTree.nodeList);
+
+  stackTree.reset();
+  stackTree.postOrder(node);
+  console.log(stackTree.nodeList);
+
+  // 广度度优先遍历非递归
+  class WidthTravelTree {
+    constructor() {
+      this.nodeList = [];
+      this.stack = []
+    }
+
+    widthTravel(node) {
+      if (node) {
+        this.stack.push(node);
+        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        while (this.stack.length) {
+          let item = this.stack.shift();
+          if (item.firstElementChild) {
+            this.nodeList.push(item.firstElementChild.firstChild.textContent.replace(/\n/g, '').trim());
+            this.stack.push(item.firstElementChild);
+          }
+          if (item.lastElementChild) {
+            this.nodeList.push(item.lastElementChild.firstChild.textContent.replace(/\n/g, '').trim());
+            this.stack.push(item.lastElementChild)
+          }
+        }
+      }
+    }
+  }
+
+
+  console.log('WidthTravelTree');
+  let widthTravelTree = new WidthTravelTree();
+  widthTravelTree.widthTravel(node);
+  console.log(widthTravelTree.nodeList);
 
 </script>
 </html>

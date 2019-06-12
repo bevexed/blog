@@ -6,7 +6,9 @@ categories:
 tags: 
   - Scroll
 ---
+
 # documentElement 与 body
+
 ## document.documentElement
 > 返回 html 
 > dom 中的 root 节点
