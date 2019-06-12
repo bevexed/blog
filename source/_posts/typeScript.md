@@ -23,7 +23,7 @@ tags:
 ```
 
 ## 编译
-```bashb
+```bash
 > tsc <file>
 ```
 
@@ -181,7 +181,6 @@ let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Ri
 ```javascript
 var directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
 ```
-
 
 #### 任意类型 `any`
 - 为不清楚类型的变量指定一个类型
