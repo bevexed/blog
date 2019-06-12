@@ -4,7 +4,6 @@ date: 2019-02-01 10:41:10
 categories: 
   - Vue
 tags: 
-  - 插件
   - TypeScript
 ---
 ## @Emit

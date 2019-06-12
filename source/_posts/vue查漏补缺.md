@@ -1,7 +1,8 @@
 ---
 title: vue查漏补缺
 date: 2019-02-11 16:59:36
-categories: Vue
+categories: 
+ - Vue
 tags:
  - Vue
  - 修饰符

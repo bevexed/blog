@@ -4,7 +4,6 @@ date: 2019-01-23 16:08:53
 categories: 
   - DOM
 tags: 
-  - 兼容 
   - Scroll
 ---
 # documentElement 与 body
