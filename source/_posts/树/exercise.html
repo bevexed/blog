@@ -54,7 +54,7 @@
 
     preOrder = node => {
       if (node) {
-        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        this.nodeList.push(node.firstChild.textContent.trim());
         this.preOrder(node.firstElementChild);
         this.preOrder(node.lastElementChild);
       }
@@ -63,7 +63,7 @@
     inOrder = node => {
       if (node) {
         this.inOrder(node.firstElementChild);
-        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        this.nodeList.push(node.firstChild.textContent.trim());
         this.inOrder(node.lastElementChild);
       }
     };
@@ -72,7 +72,7 @@
       if (node) {
         this.postOrder(node.firstElementChild);
         this.postOrder(node.lastElementChild);
-        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        this.nodeList.push(node.firstChild.textContent.trim());
       }
     };
 
@@ -105,14 +105,11 @@
       this.stack = []
     }
 
-    /*
-    * 1. 入栈时，取得所有的左孩子
-    * 2. 出栈时，取得所有右孩子
-    * */
+
     preOrder(node) {
       let treeNode = node;
       while (treeNode || this.stack.length) {
-        // 进栈
+        // 进栈 将所有左节点压栈
         while (treeNode) {
           this.stack.push(treeNode);
           this.nodeList.push(treeNode.firstChild.textContent.trim());
@@ -141,17 +138,26 @@
       }
     }
 
+    /*
+    *  将根节点压入第一个栈
+    *  从第一个栈中弹出一个元素，压入第二个栈
+    *  然后分别将该节点的左右孩子压入第一个栈
+    *  重复步骤2和步骤3直到第一个栈为空
+    *  执行结束，第二个栈中就保存了所有节点的后序遍历输出结果。依次将元素从第二个栈中弹出即可。
+    */
+
     postOrder(node) {
       let treeNode = node;
-      let parentNode;
-      while (treeNode || this.stack.length) {
-        while (treeNode) {
-          this.stack.push(treeNode);
-          treeNode = treeNode.firstElementChild;
+      this.stack.push(treeNode);
+      while (this.stack.length) {
+        treeNode = this.stack.pop();
+        this.nodeList.unshift(treeNode.firstChild.textContent.trim());
+
+        if (treeNode.firstElementChild) {
+          this.stack.push(treeNode.firstElementChild)
         }
-        if (this.stack.length && !treeNode) {
-          treeNode = this.stack.pop();
-          treeNode = treeNode.lastElementChild;
+        if (treeNode.lastElementChild) {
+          this.stack.push(treeNode.lastElementChild)
         }
       }
     }
@@ -164,7 +170,7 @@
   }
 
   let stackTree = new StackTree();
-  console.log('TravelTree');
+  console.log('stackTree');
 
   stackTree.preOrder(node);
   console.log(stackTree.nodeList);
@@ -184,18 +190,19 @@
       this.stack = []
     }
 
+    // 队列
     widthTravel(node) {
       if (node) {
         this.stack.push(node);
-        this.nodeList.push(node.firstChild.textContent.replace(/\n/g, '').trim());
+        this.nodeList.push(node.firstChild.textContent.trim());
         while (this.stack.length) {
           let item = this.stack.shift();
           if (item.firstElementChild) {
-            this.nodeList.push(item.firstElementChild.firstChild.textContent.replace(/\n/g, '').trim());
+            this.nodeList.push(item.firstElementChild.firstChild.textContent.trim());
             this.stack.push(item.firstElementChild);
           }
           if (item.lastElementChild) {
-            this.nodeList.push(item.lastElementChild.firstChild.textContent.replace(/\n/g, '').trim());
+            this.nodeList.push(item.lastElementChild.firstChild.textContent.trim());
             this.stack.push(item.lastElementChild)
           }
         }
