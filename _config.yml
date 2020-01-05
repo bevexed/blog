@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: bev
+title: 两万
 subtitle: Daily
 description: 前端日常学习
-keywords: [js,html,css,node,javaScript,html5,css3,vue,canvas,]
-author: bev
+keywords: [js,html,css,node,javaScript,html5,css3,vue,canvas,'前端','设计模式','后台','nginx']
+author: 两万
 language: zh-Hans
 timezone:
 
